@@ -1,16 +1,21 @@
 package net.dyzynz.androidclub.doings;
 
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        insertNote("New note");
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -28,6 +34,15 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    private void insertNote(String noteText) {
+        ContentValues values = new ContentValues();
+        values.put(DBOpenHelper.NOTE_TEXT, noteText);
+        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI, values);
+        if (noteUri != null) {
+            Log.d(TAG, "onCreate: Inserted note " + noteUri.getLastPathSegment());
+        }
     }
 
     @Override
