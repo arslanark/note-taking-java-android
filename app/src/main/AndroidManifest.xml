@@ -19,6 +19,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
+        <provider
+            android:authorities="net.dyzynz.androidclub.doings.notesprovider"
+            android:name=".NotesProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

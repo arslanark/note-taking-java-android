@@ -19,10 +19,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Database Instance
-        DBOpenHelper helper = new DBOpenHelper(this);
-        SQLiteDatabase database = helper.getWritableDatabase();
-        
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
