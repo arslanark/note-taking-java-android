@@ -1,22 +1,28 @@
 package net.dyzynz.androidclub.doings;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +31,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         insertNote("New note");
+
+        Cursor cursor = getContentResolver().query(NotesProvider.CONTENT_URI,
+                DBOpenHelper.ALL_COLUMNS, null, null, null, null);
+        String[] from = {DBOpenHelper.NOTE_TEXT};
+        int[] to = {android.R.id.text1};
+        CursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1, cursor, from, to, 0);
+
+        ListView list = findViewById(android.R.id.list);
+        list.setAdapter(cursorAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
