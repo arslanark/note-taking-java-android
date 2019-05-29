@@ -1,13 +1,16 @@
 package net.dyzynz.androidclub.doings;
 
-import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,11 +21,11 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private CursorAdapter cursorAdapter;
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,15 +35,15 @@ public class MainActivity extends AppCompatActivity {
 
         insertNote("New note");
 
-        Cursor cursor = getContentResolver().query(NotesProvider.CONTENT_URI,
-                DBOpenHelper.ALL_COLUMNS, null, null, null, null);
         String[] from = {DBOpenHelper.NOTE_TEXT};
         int[] to = {android.R.id.text1};
-        CursorAdapter cursorAdapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1, cursor, from, to, 0);
+        cursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1, null, from, to, 0);
 
         ListView list = findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
+
+        getSupportLoaderManager().initLoader(0, null, this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,5 +84,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, @Nullable Bundle bundle) {
+        return new CursorLoader(this, NotesProvider.CONTENT_URI,
+                null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor cursor) {
+        cursorAdapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
     }
 }
