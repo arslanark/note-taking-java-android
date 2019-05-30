@@ -9,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -23,7 +21,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -62,10 +59,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private void insertNote(String noteText) {
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
-        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI, values);
-        if (noteUri != null) {
-            Log.d(TAG, "onCreate: Inserted note " + noteUri.getLastPathSegment());
-        }
+        getContentResolver().insert(NotesProvider.CONTENT_URI, values);
     }
 
     @Override

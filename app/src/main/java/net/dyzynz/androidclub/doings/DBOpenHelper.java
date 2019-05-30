@@ -12,12 +12,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     //Constants for identifying table and columns
-    public static final String TABLE_NOTES = "notes";
-    public static final String NOTE_ID = "_id";
-    public static final String NOTE_TEXT = "noteText";
-    public static final String NOTE_CREATED = "noteCreated";
+    static final String TABLE_NOTES = "notes";
+    static final String NOTE_ID = "_id";
+    static final String NOTE_TEXT = "noteText";
+    static final String NOTE_CREATED = "noteCreated";
 
-    public static final String[] ALL_COLUMNS =
+    static final String[] ALL_COLUMNS =
             {NOTE_ID, NOTE_TEXT, NOTE_CREATED};
 
     //SQL to create table
@@ -28,7 +28,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     NOTE_CREATED + " TEXT default CURRENT_TIMESTAMP" +
                     ")";
 
-    public DBOpenHelper(@Nullable Context context) {
+    DBOpenHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
