@@ -60,22 +60,32 @@ public class EditorActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_editor, menu);
+        if (action.equals(Intent.ACTION_EDIT)) {
+            getMenuInflater().inflate(R.menu.menu_editor, menu);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 finishEditing();
                 break;
+            case R.id.action_delete_note:
+                deleteNote();
         }
 
         return true;
+    }
+
+    private void deleteNote() {
+        getContentResolver().delete(NotesProvider.CONTENT_URI,
+                noteFilter, null);
+        Toast.makeText(this, R.string.note_deleted, Toast.LENGTH_SHORT).show();
+        setResult(RESULT_OK);
+        finish();
     }
 
     private void finishEditing() {
@@ -90,7 +100,7 @@ public class EditorActivity extends AppCompatActivity {
                 break;
             case Intent.ACTION_EDIT:
                 if (newText.length() == 0) {
-//                    deleteNote();
+                    deleteNote();
                 } else if (oldText.equals(newText)) {
                     setResult(RESULT_CANCELED);
                 } else {
